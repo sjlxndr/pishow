@@ -32,21 +32,26 @@ This project provides a simple, robust, and self-contained solution for turning 
 ## Deployment
 
 1.  **Flash the OS**: Use the Raspberry Pi Imager to flash **Raspberry Pi OS Lite (64-bit)** to your SD card.
+2.  **Install Git**:
+   
+    ```
+    sudo apt install git
+    ```
 
-2.  **Clone the Repository**: On the Raspberry Pi, clone this repository:
+3.  **Clone the Repository**: On the Raspberry Pi, clone this repository:
 
     ```bash
     git clone https://github.com/sjlxndr/pishow
     cd pishow
     ```
 
-3.  **Run the Setup Script**: This script will install all necessary packages and configure the system.
+4.  **Run the Setup Script**: This script will install all necessary packages and configure the system.
 
     ```bash
     sudo bash setup.sh
     ```
 
-4.  **Reboot**: After the setup is complete, reboot the Pi.
+5.  **Reboot**: After the setup is complete, reboot the Pi.
 
 ## Usage
 
