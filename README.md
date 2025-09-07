@@ -5,7 +5,8 @@ This project provides a simple, robust, and self-contained solution for turning 
 ## Features
 
   * **Non-Interactive**: Boots directly to the slideshow without a keyboard, mouse, or manual login.
-  * **USB Drive Support**: Automatically mounts and reads photos and settings from any attached USB mass storage device.
+  * **USB Drive Support**: Automatically detects, mounts, and reads photos and settings from any attached USB mass storage device.
+  * **Image Filtering**: Automatically filters for valid image files within the `photos` directory.
   * **Robust**: Handles common user errors like corrupt files or a missing `photos` directory by displaying an informative on-screen message.
   * **Automated Deployment**: A single `setup.sh` script automates the entire installation and configuration process, making it easy to replicate.
 
@@ -61,15 +62,14 @@ This project provides a simple, robust, and self-contained solution for turning 
 
 ### Customizing the Slideshow
 
-You can customize the slideshow's behavior by editing the settings.txt file on your USB drive.
+You can customize the slideshow's behavior by creating a `settings.txt` file in the root directory of your USB drive. This file contains a single key-value pair to control the duration of each slide.
 
-`settings.txt`
+`settings.txt` example:
+```
+slideshow_delay=10
+```
 
-This file should be placed in the root directory of your USB drive. It contains a single key-value pair to control the duration of each slide.
-
-`slideshow_delay=10`
-
-slideshow_delay: Set this to the number of seconds you want each photo to display. If this file is missing, the script will default to a 10-second delay.
+*   **slideshow_delay**: Set this to the number of seconds you want each photo to display. If this file or the `slideshow_delay` entry is missing, the slideshow will default to a 10-second delay.
 
 
 

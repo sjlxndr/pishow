@@ -34,8 +34,7 @@ cp templates/nophotodriveattached.jpg /home/pi/nophotodriveattached.jpg
 check_status
 cp templates/nophotosindrive.jpg /home/pi/nophotosindrive.jpg
 check_status
-cp templates/settings.txt /home/pi/settings.txt
-check_status
+
 
 # --- 3. Copy Scripts and Set Permissions ---
 echo "Copying and configuring autostart scripts..."
