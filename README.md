@@ -59,3 +59,19 @@ This project provides a simple, robust, and self-contained solution for turning 
   * **With a USB Drive**: Plug in a USB flash drive containing a folder named `photos` (case-insensitive) with your image files. The slideshow will start automatically.
 
   * **Without a USB Drive**: The system will display the "no photos drive attached" message.
+
+### Customizing the Slideshow
+
+You can customize the slideshow's behavior by editing the settings.txt file on your USB drive.
+
+`settings.txt`
+
+This file should be placed in the root directory of your USB drive. It contains a single key-value pair to control the duration of each slide.
+
+`slideshow_delay=10`
+
+slideshow_delay: Set this to the number of seconds you want each photo to display. If this file is missing, the script will default to a 10-second delay.
+
+
+
+
