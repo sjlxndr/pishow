@@ -3,8 +3,8 @@
 # Define mount points and image paths
 MOUNT_POINT="/mnt/slideshow"
 PHOTOS_DIR=$(find "$MOUNT_POINT" -maxdepth 1 -type d -iname "photos" | head -1)
-NO_PHOTOS_IN_DRIVE_IMAGE="/home/pi/photos/nophotosindrive.jpg"
-NO_DRIVE_ATTACHED_IMAGE="/home/pi/photos/nophotodriveattached.jpg"
+NO_PHOTOS_IN_DRIVE_IMAGE="/home/pi/nophotosindrive.jpg"
+NO_DRIVE_ATTACHED_IMAGE="/home/pi/nophotodriveattached.jpg"
 
 # Prevents screen blanking and power management
 xset s off
