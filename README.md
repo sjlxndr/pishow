@@ -35,6 +35,7 @@ This project provides a simple, robust, and self-contained solution for turning 
 2.  **Install Git**:
    
     ```
+    sudo apt update
     sudo apt install git
     ```
 
