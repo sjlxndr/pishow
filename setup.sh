@@ -2,7 +2,8 @@
 
 # A simple counter for failures
 FAILURES=0
-
+# enable auto-login
+raspi-config nonint do_boot_behaviour B2
 # A function to check the last command's exit status
 check_status() {
     if [ $? -ne 0 ]; then
