@@ -47,14 +47,14 @@ while true; do
             find "$PHOTOS_DIR" -maxdepth 1 -type f | while read -r file; do
                 if file -b --mime-type "$file" | grep -q "^image/"; then
                     # Use printf to properly quote and append filenames to the string
-                    printf '%s ' "'$file'" >> "/tmp/valid_photos_$"
+                    printf '%s ' "'$file'" >> "/tmp/valid_photos_$$"
                 fi
             done
 
             # Read the final string from the temporary file
-            if [ -f "/tmp/valid_photos_$" ]; then
-                VALID_PHOTOS_STRING=$(cat "/tmp/valid_photos_$")
-                rm "/tmp/valid_photos_$"
+            if [ -f "/tmp/valid_photos_$$" ]; then
+                VALID_PHOTOS_STRING=$(cat "/tmp/valid_photos_$$")
+                rm "/tmp/valid_photos_$$"
             fi
 
             if [ -n "$VALID_PHOTOS_STRING" ]; then
@@ -67,8 +67,7 @@ while true; do
                 fi
 
                 # Start the slideshow in the foreground and wait for it to exit
-                echo "DISPLAY: $DISPLAY" >> /tmp/feh_debug.log 2>&1
-                eval /usr/bin/feh --fullscreen --slideshow-delay "$slideshow_delay" $VALID_PHOTOS_STRING >> /tmp/feh_debug.log 2>&1
+                eval /usr/bin/feh --fullscreen --slideshow-delay "$slideshow_delay" $VALID_PHOTOS_STRING
             else
                 # Drive is attached but has no valid photos.
                 /usr/bin/feh --fullscreen "$NO_PHOTOS_IN_DRIVE_IMAGE"
