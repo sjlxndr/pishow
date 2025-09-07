@@ -29,6 +29,8 @@ apt update
 check_status
 DEBIAN_FRONTEND=noninteractive apt upgrade -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"
 check_status
+apt autopurge -y
+check_status
 apt install -y xserver-xorg x11-xserver-utils unclutter feh xinit systemd-sysv
 check_status
 
@@ -53,8 +55,8 @@ check_status
 # --- 4. Configure Udev Rule ---
 echo "Creating udev rule to handle USB hot-plugging..."
 cat > /etc/udev/rules.d/99-slideshow.rules << EOF
-ACTION=="add", SUBSYSTEM=="block", ENV{ID_BUS}=="usb", RUN+="/bin/sh -c '/usr/bin/systemd-mount --no-block --automount=yes --collect /dev/%k /mnt/slideshow'"
-ACTION=="remove", SUBSYSTEM=="block", ENV{ID_BUS}=="usb", RUN+="/bin/sh -c 'if [ \"$(findmnt -n -o SOURCE /mnt/slideshow)\" = \"/dev/%k\" ]; then umount /mnt/slideshow; fi'"
+ACTION=="add", SUBSYSTEM=="block", ENV{ID_BUS}=="usb", RUN+="/bin/sh -c 'pkill feh &'"
+ACTION=="remove", SUBSYSTEM=="block", ENV{ID_BUS}=="usb", RUN+="/bin/sh -c 'pkill feh &'"
 EOF
 check_status
 udevadm control --reload-rules
