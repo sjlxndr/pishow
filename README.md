@@ -21,8 +21,9 @@ This project provides a simple, robust, and self-contained solution for turning 
 ```
 .
 ├── setup.sh                 # The main deployment script
-├── autostart.sh             # Handles mounting and starting the graphical session
+├── autostart.sh             # Starts the X server and then runs the slideshow_manager.sh
 ├── run_slideshow.sh         # The script that runs the slideshow
+├── slideshow_manager.sh     # Manages USB drive mounting, photo validation, and continuously runs the slideshow.
 └── templates/
     ├── settings.txt         # Template for slideshow duration
     ├── nophotodriveattached.jpg   # Displayed when no USB drive is found

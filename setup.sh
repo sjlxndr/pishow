@@ -1,5 +1,14 @@
 #!/bin/bash
 
+# Get the absolute path of the script's directory
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+
+# Define the home directory for the SUDO_USER
+HOME_DIR="/home/$SUDO_USER"
+
+# Change into the script's directory
+cd "$SCRIPT_DIR"
+
 # A simple counter for failures
 FAILURES=0
 # enable auto-login
@@ -22,8 +31,6 @@ fi
 echo "Updating packages and installing required software..."
 apt update
 check_status
-DEBIAN_FRONTEND=noninteractive apt upgrade -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"
-check_status
 apt install -y xserver-xorg x11-xserver-utils unclutter feh xinit
 check_status
 
@@ -31,32 +38,49 @@ check_status
 echo "Creating mount point and copying template files..."
 mkdir -p /mnt/slideshow
 check_status
-cp templates/nophotodriveattached.jpg /home/pi/nophotodriveattached.jpg
-check_status
-cp templates/nophotosindrive.jpg /home/pi/nophotosindrive.jpg
+cp templates/nophotodriveattached.jpg "$HOME_DIR/nophotodriveattached.jpg"
 check_status
 
-
-# --- 3. Copy Scripts and Set Permissions ---
-echo "Copying and configuring autostart scripts..."
-chmod +x autostart.sh
-check_status
-chmod +x run_slideshow.sh
-check_status
-cp autostart.sh /home/pi/autostart.sh
-check_status
-cp run_slideshow.sh /home/pi/run_slideshow.sh
-check_status
-chown pi:pi /home/pi/autostart.sh
-check_status
-chown pi:pi /home/pi/run_slideshow.sh
+cp templates/nophotosindrive.jpg "$HOME_DIR/nophotosindrive.jpg"
 check_status
 
-# --- 4. Add Script to User Startup ---
-# This ensures the autostart.sh script is run at login
-echo "Adding autostart script to .bash_profile..."
-echo "/home/pi/autostart.sh" >> /home/pi/.bash_profile
+# --- 3. Copy Scripts ---
+echo "Copying autostart scripts..."
+cp autostart.sh "$HOME_DIR/autostart.sh"
 check_status
+cp slideshow_manager.sh "$HOME_DIR/slideshow_manager.sh"
+check_status
+
+# --- 4. Configure Udev Rule ---
+echo "Creating udev rule to handle USB hot-plugging..."
+cat > /etc/udev/rules.d/99-slideshow.rules << EOF
+ACTION=="add", SUBSYSTEM=="block", ENV{ID_BUS}=="usb", RUN+="/bin/sh -c 'pkill feh &'"
+ACTION=="remove", SUBSYSTEM=="block", ENV{ID_BUS}=="usb", RUN+="/bin/sh -c 'pkill feh &'"
+EOF
+check_status
+udevadm control --reload-rules
+check_status
+
+# --- 5. Fix ownership and permissions ---
+echo "Setting file ownership and permissions for the pi user..."
+chown -R "$SUDO_UID:$SUDO_GID" "$HOME_DIR"
+check_status
+chmod +x "$HOME_DIR"/*.sh
+check_status
+
+# --- 6. Enable automatic login ---
+echo "Enabling automatic login..."
+raspi-config nonint do_boot_behaviour B2
+check_status
+
+# --- 7. Add Script to User Startup (with idempotency check) ---
+echo "Checking and adding autostart script to .bash_profile..."
+if ! grep -q "$HOME_DIR/autostart.sh" "$HOME_DIR/.bash_profile"; then
+    echo "$HOME_DIR/autostart.sh" >> "$HOME_DIR/.bash_profile"
+    check_status
+else
+    echo "Autostart line already exists in .bash_profile."
+fi
 
 # --- Final Check and Reboot ---
 if [ $FAILURES -eq 0 ]; then
