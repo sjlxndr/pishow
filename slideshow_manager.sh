@@ -51,7 +51,8 @@ while true; do
             fi
 
             # Start the slideshow in the foreground and wait for it to exit
-            /usr/bin/feh --fullscreen --slideshow-delay "$slideshow_delay" "$PHOTOS_DIR"
+            echo "DISPLAY: $DISPLAY" >> /tmp/feh_debug.log 2>&1
+            /usr/bin/feh --fullscreen --slideshow-delay "$slideshow_delay" "$PHOTOS_DIR" >> /tmp/feh_debug.log 2>&1
         else
             # Drive is attached but has no valid photos.
             /usr/bin/feh --fullscreen "$NO_PHOTOS_IN_DRIVE_IMAGE"
