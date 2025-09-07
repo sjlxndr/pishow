@@ -36,8 +36,8 @@ This project provides a simple, robust, and self-contained solution for turning 
 2.  **Clone the Repository**: On the Raspberry Pi, clone this repository:
 
     ```bash
-    git clone [your-repo-url]
-    cd [your-repo-name]
+    git clone https://github.com/sjlxndr/pishow
+    cd pishow
     ```
 
 3.  **Run the Setup Script**: This script will install all necessary packages and configure the system.
