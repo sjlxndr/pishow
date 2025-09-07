@@ -11,9 +11,8 @@ This project provides a simple, robust, and self-contained solution for turning 
 
 ## Requirements
 
-  * Raspberry Pi 3B+ or newer
+  * Raspberri Pi (3B+ or newer recommended)
   * Raspberry Pi OS Lite (latest version recommended)
-  * A stable 5.1V, 2.5A power supply for the Raspberry Pi
   * A USB flash drive with a `photos` directory and an optional `settings.txt` file
 
 ## Project Structure
