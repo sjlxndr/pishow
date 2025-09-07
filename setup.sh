@@ -1,4 +1,15 @@
 #!/bin/bash
+skip=0
+# Use a while loop to parse arguments
+while [ "$1" != "" ]; do
+    case "$1" in
+        --skip-upgrade | -s )
+            shift
+            skip=1
+            ;;
+    esac
+    shift
+done
 
 # Get the absolute path of the script's directory
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
@@ -27,9 +38,9 @@ fi
 echo "Updating packages and installing required software..."
 apt update
 check_status
-DEBIAN_FRONTEND=noninteractive apt upgrade -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"
+[ $skip == 1 ] || DEBIAN_FRONTEND=noninteractive apt upgrade -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"
 check_status
-apt autopurge -y
+[ $skip == 1 ] || apt autopurge -y
 check_status
 apt install -y xserver-xorg x11-xserver-utils unclutter feh xinit systemd-sysv
 check_status
