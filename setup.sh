@@ -41,19 +41,28 @@ check_status
 echo "Copying and configuring autostart scripts..."
 chmod +x autostart.sh
 check_status
-chmod +x run_slideshow.sh
+chmod +x slideshow_manager.sh
 check_status
 cp autostart.sh /home/pi/autostart.sh
 check_status
-cp run_slideshow.sh /home/pi/run_slideshow.sh
+cp slideshow_manager.sh /home/pi/slideshow_manager.sh
 check_status
 chown pi:pi /home/pi/autostart.sh
 check_status
-chown pi:pi /home/pi/run_slideshow.sh
+chown pi:pi /home/pi/slideshow_manager.sh
 check_status
 
-# --- 4. Add Script to User Startup ---
-# This ensures the autostart.sh script is run at login
+# --- 4. Configure Udev Rule ---
+echo "Creating udev rule to handle USB hot-plugging..."
+cat > /etc/udev/rules.d/99-slideshow.rules << EOF
+ACTION=="add", SUBSYSTEM=="block", ENV{ID_BUS}=="usb", RUN+="/bin/sh -c '/home/pi/slideshow_manager.sh refresh &'"
+ACTION=="remove", SUBSYSTEM=="block", ENV{ID_BUS}=="usb", RUN+="/bin/sh -c '/home/pi/slideshow_manager.sh refresh &'"
+EOF
+check_status
+udevadm control --reload-rules
+check_status
+
+# --- 5. Add Script to User Startup ---
 echo "Adding autostart script to .bash_profile..."
 echo "/home/pi/autostart.sh" >> /home/pi/.bash_profile
 check_status
