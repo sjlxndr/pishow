@@ -79,7 +79,12 @@ check_status
 chmod +x "/home/$SUDO_USER"/*.sh
 check_status
 
-# --- 6. Add Script to User Startup (with idempotency check) ---
+# --- 6. Enable automatic login ---
+echo "Enabling automatic login..."
+raspi-config nonint do_boot_behaviour B2
+check_status
+
+# --- 7. Add Script to User Startup (with idempotency check) ---
 echo "Checking and adding autostart script to .bash_profile..."
 if ! grep -q "/home/$SUDO_USER/autostart.sh" "/home/$SUDO_USER/.bash_profile"; then
     echo "/home/$SUDO_USER/autostart.sh" >> "/home/$SUDO_USER/.bash_profile"
