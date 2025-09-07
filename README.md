@@ -21,8 +21,9 @@ This project provides a simple, robust, and self-contained solution for turning 
 ```
 .
 ├── setup.sh                 # The main deployment script
-├── autostart.sh             # Handles mounting and starting the graphical session
+├── autostart.sh             # Starts the X server and then runs the slideshow_manager.sh
 ├── run_slideshow.sh         # The script that runs the slideshow
+├── slideshow_manager.sh     # Manages USB drive mounting, photo validation, and continuously runs the slideshow.
 └── templates/
     ├── settings.txt         # Template for slideshow duration
     ├── nophotodriveattached.jpg   # Displayed when no USB drive is found
@@ -52,7 +53,7 @@ This project provides a simple, robust, and self-contained solution for turning 
     sudo bash setup.sh
     ```
 
-    this can optionally be run with the `-s` or `--skip-upgrade` flag to save time in setup. Running updates is recommended, particularly if this device will be online in any capacity, but skipping updates at this stage will save significant setup time.
+    This script will install all necessary packages, configure the system, and copy `autostart.sh` and `slideshow_manager.sh` to the user's home directory. This can optionally be run with the `-s` or `--skip-upgrade` flag to save time in setup. Running updates is recommended, particularly if this device will be online in any capacity, but skipping updates at this stage will save significant setup time.
 
 5.  **Reboot**: After the setup is complete, reboot the Pi.
 
