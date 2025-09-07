@@ -4,7 +4,6 @@ skip=0
 while [ "$1" != "" ]; do
     case "$1" in
         --skip-upgrade | -s )
-            shift
             skip=1
             ;;
     esac
@@ -35,32 +34,32 @@ if [ "$(id -u)" -ne 0 ]; then
 fi
 
 # --- 1. Install Dependencies ---
-echo "Updating packages and installing required software..."
+[ $skip == 1 ] && echo "Updating packages..." || echo "Updating packages and installing required software..."
 apt update
 check_status
 [ $skip == 1 ] || DEBIAN_FRONTEND=noninteractive apt upgrade -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"
 check_status
 [ $skip == 1 ] || apt autopurge -y
 check_status
-apt install -y xserver-xorg x11-xserver-utils unclutter feh xinit systemd-sysv
+apt install -y xserver-xorg x11-xserver-utils unclutter feh xinit
 check_status
 
 # --- 2. Create Mount Point and Copy Template Files ---
 echo "Creating mount point and copying template files..."
 mkdir -p /mnt/slideshow
 check_status
-cp templates/nophotodriveattached.jpg /home/pi/nophotodriveattached.jpg
+cp templates/nophotodriveattached.jpg /home/$SUDO_USER/nophotodriveattached.jpg
 check_status
-cp templates/nophotosindrive.jpg /home/pi/nophotosindrive.jpg
+cp templates/nophotosindrive.jpg /home/$SUDO_USER/nophotosindrive.jpg
 check_status
-cp templates/settings.txt /home/pi/settings.txt
+cp templates/settings.txt /home/$SUDO_USER/settings.txt
 check_status
 
 # --- 3. Copy Scripts ---
 echo "Copying autostart scripts..."
-cp autostart.sh /home/pi/autostart.sh
+cp autostart.sh /home/$SUDO_USER/autostart.sh
 check_status
-cp slideshow_manager.sh /home/pi/slideshow_manager.sh
+cp slideshow_manager.sh /home/$SUDO_USER/slideshow_manager.sh
 check_status
 
 # --- 4. Configure Udev Rule ---
