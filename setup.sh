@@ -44,7 +44,7 @@ check_status
 check_status
 [ $skip == 1 ] || apt autopurge -y
 check_status
-apt install -y --no-install-recommends xserver-xorg x11-xserver-utils unclutter feh xinit
+apt install -y xserver-xorg x11-xserver-utils unclutter feh xinit
 check_status
 
 # --- 2. Create Mount Point and Copy Template Files ---
