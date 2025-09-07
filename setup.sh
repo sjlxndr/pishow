@@ -13,6 +13,9 @@ done
 # Get the absolute path of the script's directory
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
+# Define the home directory for the SUDO_USER
+HOME_DIR="/home/$SUDO_USER"
+
 # Change into the script's directory
 cd "$SCRIPT_DIR"
 
@@ -48,18 +51,17 @@ check_status
 echo "Creating mount point and copying template files..."
 mkdir -p /mnt/slideshow
 check_status
-cp templates/nophotodriveattached.jpg /home/$SUDO_USER/nophotodriveattached.jpg
+cp templates/nophotodriveattached.jpg "$HOME_DIR/nophotodriveattached.jpg"
 check_status
-cp templates/nophotosindrive.jpg /home/$SUDO_USER/nophotosindrive.jpg
+cp templates/nophotosindrive.jpg "$HOME_DIR/nophotosindrive.jpg"
 check_status
-cp templates/settings.txt /home/$SUDO_USER/settings.txt
-check_status
+
 
 # --- 3. Copy Scripts ---
 echo "Copying autostart scripts..."
-cp autostart.sh /home/$SUDO_USER/autostart.sh
+cp autostart.sh "$HOME_DIR/autostart.sh"
 check_status
-cp slideshow_manager.sh /home/$SUDO_USER/slideshow_manager.sh
+cp slideshow_manager.sh "$HOME_DIR/slideshow_manager.sh"
 check_status
 
 # --- 4. Configure Udev Rule ---
@@ -74,9 +76,9 @@ check_status
 
 # --- 5. Fix ownership and permissions ---
 echo "Setting file ownership and permissions for the pi user..."
-chown -R "$SUDO_UID:$SUDO_GID" "/home/$SUDO_USER"
+chown -R "$SUDO_UID:$SUDO_GID" "$HOME_DIR"
 check_status
-chmod +x "/home/$SUDO_USER"/*.sh
+chmod +x "$HOME_DIR"/*.sh
 check_status
 
 # --- 6. Enable automatic login ---
@@ -86,8 +88,8 @@ check_status
 
 # --- 7. Add Script to User Startup (with idempotency check) ---
 echo "Checking and adding autostart script to .bash_profile..."
-if ! grep -q "/home/$SUDO_USER/autostart.sh" "/home/$SUDO_USER/.bash_profile"; then
-    echo "/home/$SUDO_USER/autostart.sh" >> "/home/$SUDO_USER/.bash_profile"
+if ! grep -q "$HOME_DIR/autostart.sh" "$HOME_DIR/.bash_profile"; then
+    echo "$HOME_DIR/autostart.sh" >> "$HOME_DIR/.bash_profile"
     check_status
 else
     echo "Autostart line already exists in .bash_profile."
