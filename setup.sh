@@ -9,7 +9,7 @@ fi
 # --- 1. Install Dependencies ---
 echo "Updating packages and installing required software..."
 apt update
-apt upgrade -y
+DEBIAN_FRONTEND=noninteractive apt upgrade -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"
 apt install -y xserver-xorg x11-xserver-utils unclutter feh xinit
 
 # --- 2. Create Mount Point and Copy Template Files ---
