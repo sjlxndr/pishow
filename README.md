@@ -53,8 +53,6 @@ This project provides a simple, robust, and self-contained solution for turning 
     sudo bash setup.sh
     ```
 
-    This script will install all necessary packages, configure the system, and copy `autostart.sh` and `slideshow_manager.sh` to the user's home directory. This can optionally be run with the `-s` or `--skip-upgrade` flag to save time in setup. Running updates is recommended, particularly if this device will be online in any capacity, but skipping updates at this stage will save significant setup time.
-
 5.  **Reboot**: After the setup is complete, reboot the Pi.
 
 ## Usage
