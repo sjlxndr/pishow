@@ -1,5 +1,7 @@
 #!/bin/bash
 
+if [ "$SSH_CONNECTION" != "" ]; then exit; fi
+
 # Define the mount point
 MOUNT_POINT="/mnt/slideshow"
 
