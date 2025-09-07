@@ -13,7 +13,7 @@ MOUNT_POINT="/mnt/slideshow"
 NO_PHOTOS_IN_DRIVE_IMAGE="/home/pi/nophotosindrive.jpg"
 NO_DRIVE_ATTACHED_IMAGE="/home/pi/nophotodriveattached.jpg"
 
-# Main loop to manage the slideshow
+# Main loop to manage the slideshow, restarts feh if it exits
 while true; do
     # Check if the mount point is valid
     if findmnt -n -o SOURCE "$MOUNT_POINT" >/dev/null; then
@@ -28,20 +28,17 @@ while true; do
                 slideshow_delay=10
             fi
 
-            # Kill existing feh process and start a new slideshow
-            pkill feh
-            /usr/bin/feh --fullscreen --slideshow-delay $slideshow_delay "$PHOTOS_DIR" &
+            # Start the slideshow in the foreground and wait for it to exit
+            /usr/bin/feh --fullscreen --slideshow-delay "$slideshow_delay" "$PHOTOS_DIR"
         else
             # Drive is attached but has no valid photos
-            pkill feh
-            /usr/bin/feh --fullscreen "$NO_PHOTOS_IN_DRIVE_IMAGE" &
+            /usr/bin/feh --fullscreen "$NO_PHOTOS_IN_DRIVE_IMAGE"
         fi
     else
         # No drive is attached
-        pkill feh
-        /usr/bin/feh --fullscreen "$NO_DRIVE_ATTACHED_IMAGE" &
+        /usr/bin/feh --fullscreen "$NO_DRIVE_ATTACHED_IMAGE"
     fi
     
-    # Wait for a hot-plug/unplug event or a timeout
-    sleep 3
+    # A brief delay to prevent a fast loop if feh exits immediately
+    sleep 1
 done

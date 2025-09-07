@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Get the absolute path of the script's directory
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+
+# Change into the script's directory
+cd "$SCRIPT_DIR"
+
 # A simple counter for failures
 FAILURES=0
 
@@ -23,7 +29,7 @@ apt update
 check_status
 DEBIAN_FRONTEND=noninteractive apt upgrade -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"
 check_status
-apt install -y xserver-xorg x11-xserver-utils unclutter feh xinit
+apt install -y xserver-xorg x11-xserver-utils unclutter feh xinit systemd-sysv
 check_status
 
 # --- 2. Create Mount Point and Copy Template Files ---
@@ -37,35 +43,38 @@ check_status
 cp templates/settings.txt /home/pi/settings.txt
 check_status
 
-# --- 3. Copy Scripts and Set Permissions ---
-echo "Copying and configuring autostart scripts..."
-chmod +x autostart.sh
-check_status
-chmod +x slideshow_manager.sh
-check_status
+# --- 3. Copy Scripts ---
+echo "Copying autostart scripts..."
 cp autostart.sh /home/pi/autostart.sh
 check_status
 cp slideshow_manager.sh /home/pi/slideshow_manager.sh
-check_status
-chown pi:pi /home/pi/autostart.sh
-check_status
-chown pi:pi /home/pi/slideshow_manager.sh
 check_status
 
 # --- 4. Configure Udev Rule ---
 echo "Creating udev rule to handle USB hot-plugging..."
 cat > /etc/udev/rules.d/99-slideshow.rules << EOF
-ACTION=="add", SUBSYSTEM=="block", ENV{ID_BUS}=="usb", RUN+="/bin/sh -c '/home/pi/slideshow_manager.sh refresh &'"
-ACTION=="remove", SUBSYSTEM=="block", ENV{ID_BUS}=="usb", RUN+="/bin/sh -c '/home/pi/slideshow_manager.sh refresh &'"
+ACTION=="add", SUBSYSTEM=="block", ENV{ID_BUS}=="usb", RUN+="/bin/sh -c '/usr/bin/systemd-mount --no-block --automount=yes --collect /dev/%k /mnt/slideshow'"
+ACTION=="remove", SUBSYSTEM=="block", ENV{ID_BUS}=="usb", RUN+="/bin/sh -c 'if [ \"$(findmnt -n -o SOURCE /mnt/slideshow)\" = \"/dev/%k\" ]; then umount /mnt/slideshow; fi'"
 EOF
 check_status
 udevadm control --reload-rules
 check_status
 
-# --- 5. Add Script to User Startup ---
-echo "Adding autostart script to .bash_profile..."
-echo "/home/pi/autostart.sh" >> /home/pi/.bash_profile
+# --- 5. Fix ownership and permissions ---
+echo "Setting file ownership and permissions for the pi user..."
+chown -R "$SUDO_UID:$SUDO_GID" "/home/$SUDO_USER"
 check_status
+chmod +x "/home/$SUDO_USER"/*.sh
+check_status
+
+# --- 6. Add Script to User Startup (with idempotency check) ---
+echo "Checking and adding autostart script to .bash_profile..."
+if ! grep -q "/home/$SUDO_USER/autostart.sh" "/home/$SUDO_USER/.bash_profile"; then
+    echo "/home/$SUDO_USER/autostart.sh" >> "/home/$SUDO_USER/.bash_profile"
+    check_status
+else
+    echo "Autostart line already exists in .bash_profile."
+fi
 
 # --- Final Check and Reboot ---
 if [ $FAILURES -eq 0 ]; then
