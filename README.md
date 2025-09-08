@@ -1,4 +1,4 @@
-# Raspberry Pi Kiosk Slideshow
+# "PiShow" Raspberry Pi Kiosk Slideshow
 
 This project provides a simple, robust, and self-contained solution for turning a Raspberry Pi into an auto-playing photo slideshow. It's designed for a headless setup on a fresh installation of Raspberry Pi OS Lite, requiring minimal user interaction after the initial setup.
 
