@@ -59,9 +59,9 @@ while true; do
 
             if [ -n "$VALID_PHOTOS_STRING" ]; then
                 # Drive is healthy and has photos.
-                SETTINGS_FILE="$MOUNT_POINT/settings.txt"
-                if [ -f "$SETTINGS_FILE" ]; then
-                    slideshow_delay=$(grep 'slideshow_delay' "$SETTINGS_FILE" | cut -d'=' -f2)
+                SETTINGS_FILE=$(find "$MOUNT_POINT" -maxdepth 1 -type f -iname "settings.txt" | head -1)
+                if [ -n "$SETTINGS_FILE" ] && [ -f "$SETTINGS_FILE" ]; then
+                    slideshow_delay=$(grep -i 'slideshow_delay' "$SETTINGS_FILE" | cut -d'=' -f2 | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
                 else
                     slideshow_delay=10
                 fi
