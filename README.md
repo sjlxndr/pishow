@@ -2,6 +2,10 @@
 
 This project provides a simple, robust, and self-contained solution for turning a Raspberry Pi into an auto-playing photo slideshow. It's designed for a headless setup on a fresh installation of Raspberry Pi OS Lite, requiring minimal user interaction after the initial setup.
 
+## Dedication
+
+This project was created for The Hub: Teen & Community Center of Bradford, VT, and is dedicated to community organizations everywhere working to connect with and serve their neighborhoods. If this project helps your organization better connect with your community, consider supporting The Hub's mission at https://www.bradfordteencenter.org/
+
 ## Features
 
   * **Non-Interactive**: Boots directly to the slideshow without a keyboard, mouse, or manual login.
